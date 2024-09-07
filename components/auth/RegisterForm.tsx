@@ -14,13 +14,13 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useTransition } from "react";
 import { FiLoader } from "react-icons/fi";
 import { toast } from "sonner";
 import { register } from "@/actions/register";
+import { useState } from "react";
 
 const RegisterForm = () => {
-  const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<RegisterSchemaType>({
     resolver: zodResolver(RegisterSchema),
@@ -31,15 +31,14 @@ const RegisterForm = () => {
     },
   });
 
-  const onSubmit = (values: RegisterSchemaType) => {
-    startTransition(() => {
-      (async () => {
-        const response = await register(values);
-        if (!response.success) return toast.error(response.message);
+  const onSubmit = async (values: RegisterSchemaType) => {
+    setIsLoading(true);
+    const response = await register(values);
+    setIsLoading(false);
 
-        toast.success(response.message);
-      })();
-    });
+    if (!response.success) return toast.error(response.message);
+
+    toast.success(response.message);
   };
 
   return (
@@ -55,7 +54,6 @@ const RegisterForm = () => {
             <FormField
               control={form.control}
               name="name"
-              disabled={isPending}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
@@ -65,6 +63,7 @@ const RegisterForm = () => {
                       placeholder="John Doe"
                       type="text"
                       autoFocus
+                      disabled={isLoading}
                     />
                   </FormControl>
                   <FormMessage />
@@ -74,7 +73,6 @@ const RegisterForm = () => {
             <FormField
               control={form.control}
               name="email"
-              disabled={isPending}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
@@ -83,6 +81,7 @@ const RegisterForm = () => {
                       {...field}
                       placeholder="john.doe@gmail.com"
                       type="email"
+                      disabled={isLoading}
                     />
                   </FormControl>
                   <FormMessage />
@@ -92,21 +91,25 @@ const RegisterForm = () => {
 
             <FormField
               control={form.control}
-              disabled={isPending}
               name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="********" type="password" />
+                    <Input
+                      {...field}
+                      placeholder="********"
+                      type="password"
+                      disabled={isLoading}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-          <Button className="w-full !mt-6" size="lg" disabled={isPending}>
-            {isPending && <FiLoader className="h-5 w-5 animate-spin mr-2" />}
+          <Button className="w-full !mt-6" size="lg" disabled={isLoading}>
+            {isLoading && <FiLoader className="h-5 w-5 animate-spin mr-2" />}
             Create Account
           </Button>
         </form>

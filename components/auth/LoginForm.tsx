@@ -17,7 +17,6 @@ import { Button } from "../ui/button";
 import { login } from "@/actions/login";
 import { useTransition } from "react";
 import { FiLoader } from "react-icons/fi";
-import { toast } from "sonner";
 
 const LoginForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -33,10 +32,7 @@ const LoginForm = () => {
   const onSubmit = (values: LoginSchemaType) => {
     startTransition(() => {
       (async () => {
-        const response = await login(values);
-        if (!response.success) return toast.error(response.message);
-
-        toast.success(response.message);
+        await login(values);
       })();
     });
   };
@@ -54,7 +50,6 @@ const LoginForm = () => {
             <FormField
               control={form.control}
               name="email"
-              disabled={isPending}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
@@ -63,6 +58,7 @@ const LoginForm = () => {
                       {...field}
                       placeholder="john.doe@gmail.com"
                       type="email"
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
@@ -72,13 +68,17 @@ const LoginForm = () => {
 
             <FormField
               control={form.control}
-              disabled={isPending}
               name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="********" type="password" />
+                    <Input
+                      {...field}
+                      placeholder="********"
+                      type="password"
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

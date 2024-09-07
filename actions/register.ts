@@ -3,7 +3,7 @@
 import { getUserByEmail } from "@/data/user";
 import prisma from "@/lib/db";
 import { RegisterSchema, RegisterSchemaType } from "@/schemas";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export const register = async (values: RegisterSchemaType) => {
   try {

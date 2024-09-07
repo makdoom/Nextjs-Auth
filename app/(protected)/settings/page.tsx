@@ -1,8 +1,17 @@
+import { logout } from "@/actions/logout";
 import { auth } from "@/auth";
+import { Button } from "@/components/ui/button";
 
 const SettingsPage = async () => {
   const session = await auth();
 
-  return <div>{JSON.stringify(session)}</div>;
+  return (
+    <div>
+      {JSON.stringify(session)}
+      <form action={logout}>
+        <Button type="submit">Logout</Button>
+      </form>
+    </div>
+  );
 };
 export default SettingsPage;

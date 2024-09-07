@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <main
       className={cn(
-        "h-full flex flex-col justify-center items-center bg-gradient-to-r from-slate-900 to-slate-700",
+        "h-full flex flex-col justify-center items-center bg-gradient-to-r from-teal-400 to-gray-800",
         font.className
       )}
     >

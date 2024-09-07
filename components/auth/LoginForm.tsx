@@ -3,8 +3,7 @@
 import CardWrapper from "@/components/wrappers/CardWrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { LoginSchema } from "@/schemas";
+import { LoginSchema, LoginSchemaType } from "@/schemas";
 import {
   Form,
   FormControl,
@@ -15,9 +14,15 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { login } from "@/actions/login";
+import { useTransition } from "react";
+import { FiLoader } from "react-icons/fi";
+import { toast } from "sonner";
 
 const LoginForm = () => {
-  const form = useForm<z.infer<typeof LoginSchema>>({
+  const [isPending, startTransition] = useTransition();
+
+  const form = useForm<LoginSchemaType>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
@@ -25,8 +30,15 @@ const LoginForm = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    console.log(values);
+  const onSubmit = (values: LoginSchemaType) => {
+    startTransition(() => {
+      (async () => {
+        const response = await login(values);
+        if (!response.success) return toast.error(response.message);
+
+        toast.success(response.message);
+      })();
+    });
   };
 
   return (
@@ -42,6 +54,7 @@ const LoginForm = () => {
             <FormField
               control={form.control}
               name="email"
+              disabled={isPending}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
@@ -59,6 +72,7 @@ const LoginForm = () => {
 
             <FormField
               control={form.control}
+              disabled={isPending}
               name="password"
               render={({ field }) => (
                 <FormItem>
@@ -71,7 +85,8 @@ const LoginForm = () => {
               )}
             />
           </div>
-          <Button className="w-full !mt-6" size="lg">
+          <Button className="w-full !mt-6" size="lg" disabled={isPending}>
+            {isPending && <FiLoader className="h-5 w-5 animate-spin mr-2" />}
             Login
           </Button>
         </form>

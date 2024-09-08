@@ -39,7 +39,17 @@ const LoginForm = () => {
   const onSubmit = (values: LoginSchemaType) => {
     startTransition(() => {
       (async () => {
-        await login(values);
+        const response = await login(values);
+        if (response.success) {
+          if (response.message.includes("Email")) {
+            toast.message(response.message, {
+              description: `We have sent an confirmation email to ${values.email}.
+              `,
+            });
+          }
+        } else {
+          toast.error(response.message);
+        }
       })();
     });
   };

@@ -18,8 +18,10 @@ import { FiLoader } from "react-icons/fi";
 import { toast } from "sonner";
 import { register } from "@/actions/register";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const RegisterForm = () => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<RegisterSchemaType>({
@@ -38,7 +40,15 @@ const RegisterForm = () => {
 
     if (!response.success) return toast.error(response.message);
 
-    toast.success(response.message);
+    if (response.message.includes("Email")) {
+      toast.message(response.message, {
+        description: `We have sent an confirmation email to ${values.email}.
+        `,
+      });
+    } else {
+      toast.success(response.message);
+    }
+    router.push("/auth/login");
   };
 
   return (

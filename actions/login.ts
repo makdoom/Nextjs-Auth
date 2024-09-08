@@ -1,6 +1,8 @@
 "use server";
 
 import { signIn } from "@/auth";
+import { getUserByEmail } from "@/data/user";
+import { generateToken } from "@/lib/token";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { LoginSchema, LoginSchemaType } from "@/schemas";
 import { AuthError } from "next-auth";
@@ -13,6 +15,17 @@ export const login = async (values: LoginSchemaType) => {
 
   try {
     const { email, password } = validatedFields.data;
+    if (!email)
+      return { success: 0, message: "Please provide valid email address" };
+    if (!password)
+      return { success: 0, message: "Please provide valid password" };
+
+    const existingUser = await getUserByEmail(email);
+    if (!existingUser?.emailVerified) {
+      await generateToken(email);
+      return { success: 1, message: "Email Confirmation" };
+    }
+
     await signIn("credentials", {
       email,
       password,

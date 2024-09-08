@@ -2,6 +2,8 @@
 
 import { getUserByEmail } from "@/data/user";
 import prisma from "@/lib/db";
+import { sendMail } from "@/lib/mail";
+import { generateToken } from "@/lib/token";
 import { RegisterSchema, RegisterSchemaType } from "@/schemas";
 import bcrypt from "bcryptjs";
 
@@ -23,10 +25,13 @@ export const register = async (values: RegisterSchemaType) => {
       data: { name, email, password: hashedPassword },
     });
 
+    const verificationToken = await generateToken(email);
+    await sendMail(name, verificationToken.email, verificationToken.token);
+
     // TODO: Send verification email to user
     return {
       success: 1,
-      message: "User created successfully",
+      message: "Email Confirmation",
       data: newUser,
     };
   } catch (error) {

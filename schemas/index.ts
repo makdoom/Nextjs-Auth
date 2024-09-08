@@ -14,3 +14,8 @@ export const RegisterSchema = z.object({
     .min(6, { message: "Password must be atleast 6 characters long" }),
 });
 export type RegisterSchemaType = z.infer<typeof RegisterSchema>;
+
+export const ResetPasswordSchema = z.object({
+  email: z.string().email({ message: "Enter a valid email id" }),
+});
+export type ResetPasswordSchemaType = z.infer<typeof ResetPasswordSchema>;

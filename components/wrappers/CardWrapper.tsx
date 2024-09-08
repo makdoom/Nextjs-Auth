@@ -24,13 +24,13 @@ type CardWrapperPropTypes = {
   headerLabel: string;
   backButtonLabel: string;
   backButtonHref: string;
-  showSocial: boolean;
+  showSocial?: boolean;
 };
 
 const CardWrapper = ({
   children,
   heading,
-  showSocial,
+  showSocial = false,
   headerLabel,
   backButtonLabel,
   backButtonHref,

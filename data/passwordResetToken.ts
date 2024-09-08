@@ -1,12 +1,12 @@
 import prisma from "@/lib/db";
 
-export const createVerificationToken = async (
+export const createResetPasswordToken = async (
   email: string,
   newToken: string,
   expires: Date
 ) => {
   try {
-    const generatedToken = await prisma.verificationToken.create({
+    const generatedToken = await prisma.passwordResetToken.create({
       data: { email, token: newToken, expires },
     });
     return generatedToken;
@@ -15,9 +15,9 @@ export const createVerificationToken = async (
   }
 };
 
-export const getVerificationTokenByEmail = async (email: string) => {
+export const getResetPasswordTokenByEmail = async (email: string) => {
   try {
-    const token = await prisma.verificationToken.findFirst({
+    const token = await prisma.passwordResetToken.findFirst({
       where: { email },
     });
     return token;
@@ -26,9 +26,9 @@ export const getVerificationTokenByEmail = async (email: string) => {
   }
 };
 
-export const getVerificationTokenByToken = async (token: string) => {
+export const getResetPasswordTokenByToken = async (token: string) => {
   try {
-    const verificationToken = await prisma.verificationToken.findUnique({
+    const verificationToken = await prisma.passwordResetToken.findUnique({
       where: { token },
     });
     return verificationToken;
@@ -37,9 +37,9 @@ export const getVerificationTokenByToken = async (token: string) => {
   }
 };
 
-export const deleteVerificationToken = async (id: string) => {
+export const deleteResetPasswordToken = async (id: string) => {
   try {
-    await prisma.verificationToken.delete({
+    await prisma.passwordResetToken.delete({
       where: { id },
     });
   } catch (error) {

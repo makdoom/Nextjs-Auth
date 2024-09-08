@@ -3,7 +3,7 @@
 import CardWrapper from "@/components/wrappers/CardWrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginSchema, LoginSchemaType } from "@/schemas";
+import { ResetPasswordSchema, ResetPasswordSchemaType } from "@/schemas";
 import {
   Form,
   FormControl,
@@ -14,37 +14,29 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { login } from "@/actions/login";
-import { useEffect, useTransition } from "react";
+import { useTransition } from "react";
 import { FiLoader } from "react-icons/fi";
-import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import Link from "next/link";
+import { resetPassword } from "@/actions/resetPassword";
 
-const LoginForm = () => {
-  const searchParams = useSearchParams();
-  const urlError =
-    searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Email address already in use"
-      : "";
+const ResetPasswordForm = () => {
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<LoginSchemaType>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<ResetPasswordSchemaType>({
+    resolver: zodResolver(ResetPasswordSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
-  const onSubmit = (values: LoginSchemaType) => {
+  const onSubmit = (values: ResetPasswordSchemaType) => {
     startTransition(() => {
       (async () => {
-        const response = await login(values);
+        const response = await resetPassword(values);
         if (response.success) {
           if (response.message.includes("Email")) {
             toast.message(response.message, {
-              description: `We have sent an confirmation email to ${values.email}.
+              description: `We have sent an Password Reset email to ${values.email}.
               `,
             });
           }
@@ -55,18 +47,12 @@ const LoginForm = () => {
     });
   };
 
-  useEffect(() => {
-    if (urlError) {
-      toast.error(urlError);
-    }
-  }, [urlError]);
-
   return (
     <CardWrapper
-      headerLabel="Welcome back"
-      backButtonLabel="Don't have an account ?"
-      backButtonHref="/auth/register"
-      showSocial
+      heading="Forgot Password ?"
+      headerLabel="Dont' worry! It happens, we'll send you reset instructions"
+      backButtonLabel="Back to Login"
+      backButtonHref="/auth/login"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -83,45 +69,21 @@ const LoginForm = () => {
                       placeholder="john.doe@gmail.com"
                       type="email"
                       disabled={isPending}
+                      autoFocus
                     />
                   </FormControl>
                   <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="********"
-                      type="password"
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-
-                  <div className="flex justify-end">
-                    <Button size="sm" variant="link" className="px-0">
-                      <Link href="/auth/reset">Forgot Password</Link>
-                    </Button>
-                  </div>
                 </FormItem>
               )}
             />
           </div>
           <Button className="w-full !mt-6" size="lg" disabled={isPending}>
             {isPending && <FiLoader className="h-5 w-5 animate-spin mr-2" />}
-            Login
+            Send Reset Email
           </Button>
         </form>
       </Form>
     </CardWrapper>
   );
 };
-export default LoginForm;
+export default ResetPasswordForm;

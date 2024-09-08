@@ -28,7 +28,6 @@ export const register = async (values: RegisterSchemaType) => {
     const verificationToken = await generateToken(email);
     await sendMail(name, verificationToken.email, verificationToken.token);
 
-    // TODO: Send verification email to user
     return {
       success: 1,
       message: "Email Confirmation",

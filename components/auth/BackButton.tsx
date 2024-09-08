@@ -11,7 +11,9 @@ type BackButtonPropType = {
 const BackButton = ({ label, href }: BackButtonPropType) => {
   return (
     <Button variant="link" asChild size="sm" className="w-full font-sm">
-      <Link href={href}>{label}</Link>
+      <Link href={href} className="">
+        {label}
+      </Link>
     </Button>
   );
 };

@@ -19,7 +19,8 @@ const font = Inter({
 });
 
 type CardWrapperPropTypes = {
-  children: ReactNode;
+  children?: ReactNode;
+  heading?: string;
   headerLabel: string;
   backButtonLabel: string;
   backButtonHref: string;
@@ -28,6 +29,7 @@ type CardWrapperPropTypes = {
 
 const CardWrapper = ({
   children,
+  heading,
   showSocial,
   headerLabel,
   backButtonLabel,
@@ -36,7 +38,7 @@ const CardWrapper = ({
   return (
     <Card className={cn("w-[400px] shadow-md", font.className)}>
       <CardHeader>
-        <Header label={headerLabel} />
+        <Header label={headerLabel} heading={heading} />
       </CardHeader>
 
       <CardContent>{children}</CardContent>

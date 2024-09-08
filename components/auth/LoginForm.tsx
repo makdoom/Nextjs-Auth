@@ -15,10 +15,17 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { login } from "@/actions/login";
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { FiLoader } from "react-icons/fi";
+import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 const LoginForm = () => {
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email address already in use"
+      : "";
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<LoginSchemaType>({
@@ -36,6 +43,12 @@ const LoginForm = () => {
       })();
     });
   };
+
+  useEffect(() => {
+    if (urlError) {
+      toast.error(urlError);
+    }
+  }, [urlError]);
 
   return (
     <CardWrapper

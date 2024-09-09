@@ -3,7 +3,7 @@
 import CardWrapper from "@/components/wrappers/CardWrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginSchema, LoginSchemaType, TwoFactorSchema } from "@/schemas";
+import { LoginSchema, LoginSchemaType } from "@/schemas";
 import {
   Form,
   FormControl,
@@ -31,7 +31,7 @@ const LoginForm = () => {
   const [showTwoFactor, setShowTwoFactor] = useState(false);
 
   const form = useForm<LoginSchemaType>({
-    resolver: zodResolver(showTwoFactor ? TwoFactorSchema : LoginSchema),
+    resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -39,9 +39,7 @@ const LoginForm = () => {
     },
   });
 
-  console.log(form.formState);
   const onSubmit = (values: LoginSchemaType) => {
-    console.log(values);
     try {
       startTransition(() => {
         (async () => {
@@ -61,7 +59,6 @@ const LoginForm = () => {
                 description: `We have sent 2FA code to ${values.email}.
                 `,
               });
-              // form.reset();
               setShowTwoFactor(true);
             }
           } else {
@@ -82,7 +79,10 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (showTwoFactor) {
-      setTimeout(() => form.setFocus("code"), 0);
+      setTimeout(() => {
+        form.setFocus("code");
+        form.setValue("code", "");
+      }, 0);
     }
   }, [showTwoFactor, form]);
 

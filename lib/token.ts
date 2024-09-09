@@ -9,6 +9,34 @@ import {
   getVerificationTokenByEmail,
 } from "@/data/verificationToken";
 import { v4 as uuidv4 } from "uuid";
+import crypto from "crypto";
+import {
+  createTwoFactorToken,
+  deleteTwoFactorToken,
+  getTwoFactorTokenByEmail,
+} from "@/data/twoFactorToken";
+
+export const generateTwoFactorToken = async (email: string) => {
+  try {
+    const token = crypto.randomInt(100000, 1000000).toString();
+    const expires = new Date(new Date().getTime() + 5 * 60 * 1000);
+
+    const existingToken = await getTwoFactorTokenByEmail(email);
+    if (existingToken) {
+      await deleteTwoFactorToken(existingToken.id);
+    }
+
+    const generatedTwoFactorToken = await createTwoFactorToken(
+      email,
+      token,
+      expires
+    );
+
+    return generatedTwoFactorToken;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const generateVerificationToken = async (email: string) => {
   try {

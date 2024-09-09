@@ -70,3 +70,13 @@ export const sendResetPasswordMail = async (
     `,
   });
 };
+
+export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
+  await transporter.sendMail({
+    from: process.env.EMAIL,
+    to: email,
+    subject: "2FA Code",
+    text: "Your 2FA Code",
+    html: `<p>Your 2FA Code: ${token}</p>`,
+  });
+};

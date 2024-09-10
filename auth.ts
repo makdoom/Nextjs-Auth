@@ -8,6 +8,7 @@ import { getTwoFactorConfirmationByUserId } from "@/data/twoFactorConfirmation";
 declare module "next-auth" {
   interface User {
     role: "ADMIN" | "USER";
+    isTwoFactorEnabled: string;
   }
 }
 
@@ -57,6 +58,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.role = token.role as "ADMIN" | "USER";
       }
 
+      if (session.user) {
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as string;
+      }
+
       return session;
     },
 
@@ -66,8 +71,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const existingUser = await getUserById(token.sub);
       if (!existingUser) return token;
 
-      console.log("role", existingUser.role);
       token.role = existingUser.role;
+      token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
       return token;
     },
   },

@@ -1,3 +1,4 @@
+import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader } from "./ui/card";
 
 type ExtenedUser = {
@@ -6,6 +7,7 @@ type ExtenedUser = {
   image?: string | null;
   id?: string | null;
   role?: "ADMIN" | "USER";
+  isTwoFactorEnabled?: string;
 };
 type UserInfoProps = {
   label: string;
@@ -13,6 +15,7 @@ type UserInfoProps = {
 };
 
 const UserInfo = ({ label, user }: UserInfoProps) => {
+  console.log(user);
   return (
     <Card className="bg-secondary w-[600px] text-center">
       <CardHeader className="font-semibold text-xl">{label}</CardHeader>
@@ -40,6 +43,12 @@ const UserInfo = ({ label, user }: UserInfoProps) => {
           <p className="truncate text-xs p-1 font-mono bg-slate-100 rounded-sm">
             {user?.role}
           </p>
+        </div>
+        <div className="flex items-center justify-between border rounded-lg p-3 bg-white">
+          <p className="text-sm font-medium">Two Factor Authentication</p>
+          <Badge variant={user?.isTwoFactorEnabled ? "success" : "destructive"}>
+            {user?.isTwoFactorEnabled ? "ON" : "OFF"}
+          </Badge>
         </div>
       </CardContent>
     </Card>

@@ -37,6 +37,7 @@ export const login = async (values: LoginSchemaType) => {
         success: 0,
         message: "Account not found with this email address",
       };
+    console.log("user exists", existingUser);
     if (!existingUser?.emailVerified) {
       await generateVerificationToken(email);
       return { success: 1, message: "Email Confirmation" };

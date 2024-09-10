@@ -13,15 +13,15 @@ const Navbar = () => {
       <div className="flex gap-2">
         <Button
           asChild
-          variant={pathName == "/client" ? "default" : "secondary"}
-        >
-          <Link href="/client">Client</Link>
-        </Button>
-        <Button
-          asChild
           variant={pathName == "/server" ? "default" : "secondary"}
         >
           <Link href="/server">Server</Link>
+        </Button>
+        <Button
+          asChild
+          variant={pathName == "/client" ? "default" : "secondary"}
+        >
+          <Link href="/client">Client</Link>
         </Button>
         <Button
           asChild

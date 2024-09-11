@@ -2,15 +2,8 @@
 
 import { getResetPasswordTokenByToken } from "@/data/passwordResetToken";
 import { getUserByEmail } from "@/data/user";
-import { sendResetPasswordMail } from "@/lib/mail";
-import { generateResetPasswordToken } from "@/lib/token";
 import bcrypt from "bcryptjs";
-import {
-  NewPasswordSchema,
-  NewPasswordSchemaType,
-  ResetPasswordSchema,
-  ResetPasswordSchemaType,
-} from "@/schemas";
+import { NewPasswordSchema, NewPasswordSchemaType } from "@/schemas";
 import prisma from "@/lib/db";
 
 export const newPassword = async (

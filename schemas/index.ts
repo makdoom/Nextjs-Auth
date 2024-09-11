@@ -1,5 +1,13 @@
 import * as z from "zod";
 
+export const SettingSchema = z.object({
+  name: z.optional(z.string()),
+  role: z.enum(["ADMIN", "USER"]),
+  isTwoFactorEnabled: z.optional(z.boolean()),
+});
+
+export type SettingType = z.infer<typeof SettingSchema>;
+
 export const LoginSchema = z.object({
   email: z.string().email({ message: "Enter a valid email id" }),
   password: z.string().min(1, { message: "Password is required" }),

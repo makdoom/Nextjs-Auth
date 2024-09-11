@@ -23,12 +23,12 @@ const Navbar = () => {
         >
           <Link href="/client">Client</Link>
         </Button>
-        <Button
+        {/* <Button
           asChild
           variant={pathName == "/admin" ? "default" : "secondary"}
         >
           <Link href="/admin">Admin</Link>
-        </Button>
+        </Button> */}
         <Button
           asChild
           variant={pathName == "/settings" ? "default" : "secondary"}

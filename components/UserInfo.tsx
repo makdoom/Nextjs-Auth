@@ -7,7 +7,7 @@ type ExtenedUser = {
   image?: string | null;
   id?: string | null;
   role?: "ADMIN" | "USER";
-  isTwoFactorEnabled?: string;
+  isTwoFactorEnabled?: boolean;
 };
 type UserInfoProps = {
   label: string;

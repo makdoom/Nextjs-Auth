@@ -29,7 +29,6 @@ const NewVerificationForm = () => {
         setError("Something went wrong whie verifying email");
       }
     }
-    console.log(token);
   }, [token, router]);
 
   useEffect(() => {
